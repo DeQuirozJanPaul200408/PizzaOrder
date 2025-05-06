@@ -1,13 +1,10 @@
 package com.example.pizzaorder;
 
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     CheckBox checkCheese, checkMushrooms, checkOnions, checkTomatoe, checkPineapple;
     Button buttonProcessOrder, buttonNewOrder;
     TextView textOutput;
-
-    RadioGroup pizzaTypeGroup; // Added this line for pizza types
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,42 +44,42 @@ public class MainActivity extends AppCompatActivity {
         buttonNewOrder = findViewById(R.id.button2NewOrder);
         textOutput = findViewById(R.id.textView7Output);
 
-        // Grouping pizza type buttons manually (optional if you don't use RadioGroup in XML)
+        // Grouping pizza type buttons manually
         radioHamAndCheese.setOnClickListener(v -> radioHawaiian.setChecked(false));
         radioHawaiian.setOnClickListener(v -> radioHamAndCheese.setChecked(false));
 
-        // Setting listeners for size selection to ensure one is unchecked when the other is selected
+        // Setting listeners for size selection
         radioSmall.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                radioMedium.setChecked(false);  // Uncheck Medium
-                radioLarge.setChecked(false);   // Uncheck Large
+                radioMedium.setChecked(false);
+                radioLarge.setChecked(false);
             }
         });
 
         radioMedium.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                radioSmall.setChecked(false);   // Uncheck Small
-                radioLarge.setChecked(false);   // Uncheck Large
+                radioSmall.setChecked(false);
+                radioLarge.setChecked(false);
             }
         });
 
         radioLarge.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                radioSmall.setChecked(false);   // Uncheck Small
-                radioMedium.setChecked(false);  // Uncheck Medium
+                radioSmall.setChecked(false);
+                radioMedium.setChecked(false);
             }
         });
 
-        // Setting listeners for crust selection to ensure one is unchecked when the other is selected
+        // Setting listeners for crust selection
         radioThin.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                radioThick.setChecked(false);  // Uncheck Thick
+                radioThick.setChecked(false);
             }
         });
 
         radioThick.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                radioThin.setChecked(false);  // Uncheck Thin
+                radioThin.setChecked(false);
             }
         });
 
@@ -92,34 +87,7 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("PWD ID or SENIOR ID")
                     .setMessage("Do you have a PWD or Senior Citizen ID?")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        final EditText input = new EditText(MainActivity.this);
-                        input.setHint("Enter 12-digit PWD/Senior ID number");
-                        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-                        AlertDialog dialog1 = new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("Enter ID Number")
-                                .setView(input)
-                                .setCancelable(false)
-                                .setPositiveButton("Submit", null)
-                                .setNegativeButton("Cancel", (d, w) -> d.dismiss())
-                                .create();
-
-                        dialog1.setOnShowListener(dialogInterface -> {
-                            Button submitButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
-                            submitButton.setOnClickListener(view -> {
-                                String idNumber = input.getText().toString().trim();
-                                if (idNumber.length() == 12 && idNumber.matches("\\d{12}")) {
-                                    processOrder(true, idNumber);
-                                    dialog1.dismiss();
-                                } else {
-                                    input.setError("ID number must be exactly 12 digits");
-                                }
-                            });
-                        });
-
-                        dialog1.show();
-                    })
+                    .setPositiveButton("Yes", (dialog, which) -> processOrder(true, ""))
                     .setNegativeButton("No", (dialog, which) -> processOrder(false, ""))
                     .setCancelable(false)
                     .show();
@@ -214,7 +182,6 @@ public class MainActivity extends AppCompatActivity {
             double discount = totalPrice * 0.20;
             totalPrice -= discount;
             order.append("\nPWD/Senior Discount: 20%");
-            order.append("\nID Number: ").append(idNumber);
         } else {
             order.append("\nPWD/Senior Discount: Not Applied");
         }
