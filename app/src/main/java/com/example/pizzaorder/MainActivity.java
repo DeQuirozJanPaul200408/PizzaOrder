@@ -178,6 +178,10 @@ public class MainActivity extends AppCompatActivity {
 
         double totalPrice = pizzaPrice + sizePrice + crustPrice + toppingsPrice;
 
+        // Calculate VAT (12%)
+        double VAT = totalPrice * 0.12;
+        totalPrice += VAT;
+
         if (hasPWD) {
             double discount = totalPrice * 0.20;
             totalPrice -= discount;
@@ -186,7 +190,10 @@ public class MainActivity extends AppCompatActivity {
             order.append("\nPWD/Senior Discount: Not Applied");
         }
 
+        // Append VAT and total to the order
+        order.append(String.format("\nVAT (12%%): ₱%.2f", VAT));
         order.append(String.format("\nTotal Price: ₱%.2f", totalPrice));
+
         textOutput.setText(order.toString());
     }
 
